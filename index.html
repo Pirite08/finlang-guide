@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="변수와 자료형부터 반올림·정산, 절차형 rule까지 실습하는 finlang 기초 문법 가이드">
+  <meta name="color-scheme" content="light dark">
+  <title>finlang 기초 문법 가이드</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2308725b'/%3E%3Cpath d='M22 7c-4-1-6 1-7 6l-2 10c-.5 2-1.5 3-3 2m2-11h8' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./tokens.css">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./practice.js"></script>
+</head>
+<body>
+  <a class="skip" href="#content">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="finlang 가이드 맨 위"><span class="brand-icon" aria-hidden="true">ƒ</span> finlang<span class="brand-divider"></span><span class="brand-context">문법 가이드</span></a>
+      <a class="header-link" href="#practice">단리 실습 <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <main id="content">
+    <section class="hero" id="top" aria-labelledby="title">
+      <div class="shell hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="signal"></span> FINLANG / BEGINNER GUIDE</p>
+          <h1 id="title">금융 계산을<br><em>한 줄씩</em> 읽어 보세요.</h1>
+          <p class="intro">원금에 이름을 붙이고, 이율을 곱하고, 원 단위로 정산합니다. 단리 이자 예제 하나로 변수, 자료형, 실행 순서를 익혀 보세요.</p>
+          <div class="hero-links">
+            <a class="primary" href="#variables">문법부터 읽기 <span aria-hidden="true">↓</span></a>
+            <a class="secondary" href="#practice">이율 바꿔 보기 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <figure class="editor hero-editor">
+          <figcaption><span class="editor-dot" aria-hidden="true"></span> first-interest.fin <span class="editor-lang">FIN</span></figcaption>
+          <pre><code><span class="comment">// 원금 100만 원에 연이율 5%를 반년 적용</span>
+<span class="keyword">let</span> principal = <span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">1000000</span>);
+<span class="keyword">let</span> interest = principal * <span class="number">0.05</span> * <span class="number">0.5</span>;
+<span class="call">print</span>(<span class="call">settle</span>(interest, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));</code></pre>
+          <div class="editor-result"><span>OUTPUT</span><strong>KRW <b>25000</b></strong></div>
+        </figure>
+      </div>
+    </section>
+
+    <div class="shell guide-layout">
+      <aside class="contents">
+        <nav aria-label="가이드 목차">
+          <p>목차</p>
+          <ol>
+            <li><a href="#variables"><span>01</span> 변수 선언</a></li>
+            <li><a href="#types"><span>02</span> 자료형</a></li>
+            <li><a href="#settlement"><span>03</span> 반올림과 정산</a></li>
+            <li><a href="#control"><span>04</span> 조건문과 함수</a></li>
+            <li><a href="#rules"><span>05</span> rule과 step</a></li>
+            <li><a href="#practice"><span>06</span> 단리 실습</a></li>
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="lessons">
+        <section class="lesson" id="variables" aria-labelledby="variables-heading">
+          <p class="chapter"><span>01</span> VARIABLES</p>
+          <h2 id="variables-heading">계산에 쓰는 값에 이름 붙이기</h2>
+          <p class="lede"><code>let</code>으로 값을 선언하면 다음 줄부터 이름으로 쓸 수 있습니다. 이름, 대입 기호, 값, 문장의 끝을 차례대로 읽어 보세요.</p>
+          <div class="anatomy" aria-label="변수 선언 let annual_rate = 0.05;">
+            <div><code>let</code><span>선언</span></div>
+            <div><code>annual_rate</code><span>이름</span></div>
+            <div><code>=</code><span>값 연결</span></div>
+            <div><code>0.05</code><span>값</span></div>
+            <div><code>;</code><span>문장 끝</span></div>
+          </div>
+          <div class="lesson-note"><strong>이름에는 단위를 담아 보세요.</strong> <code>annual_rate</code>는 연이율, <code>years</code>는 연 단위 기간입니다. <code>0.05</code>는 5%이고, <code>0.5</code>년은 반년입니다. 주석은 <code>//</code>로 시작합니다.</div>
+        </section>
+
+        <section class="lesson" id="types" aria-labelledby="types-heading">
+          <p class="chapter"><span>02</span> TYPES</p>
+          <h2 id="types-heading">같은 숫자도 쓰임에 따라 달라집니다</h2>
+          <p class="lede">이율은 정확한 십진수, 원금은 통화가 붙은 금액입니다. 탭을 바꿔 어떤 값을 담고 어떤 연산에 쓰는지 확인해 보세요.</p>
+          <!-- Lucian UX/UI Prompt #039 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#039 -->
+<!--
+Element: 미끄러지는 알약 탭
+ID: 039 · Category: 메뉴·탭 · Tags: tabs, segmented, pill, slide, stagger
+What it does: 탭을 누르면 검은 알약이 늘어나며 미끄러져 옮겨 가고, 아래 목록은 이동한 방향에서 한 줄씩 차례로 밀려 들어옵니다.
+How to use it: 탭을 이리저리 눌러 보세요. 키보드는 좌우 방향키로 옮깁니다
+Footprint: fixed size, square
+Needs: tokens.css (the --ux-* theme tokens and the .ux base). Map the tokens to the project's theme variables.
+Live demo: https://lucianlabs.dev/uxui-prompt/#039
+-->
+<style>
+.u039{position:relative;width:340px;height:380px}
+.u039-tabs{position:relative;display:flex;padding:5px;border-radius:999px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line)}
+.u039-pill{position:absolute;left:0;top:5px;bottom:5px;width:var(--w,80px);border-radius:999px;background:var(--ux-ink);transform:translateX(var(--x,5px));box-shadow:0 8px 16px -10px var(--ux-shadow-strong);transition:transform .5s var(--ux-spring),width .5s var(--ux-spring)}
+.u039-tab{position:relative;flex:1;height:42px;border:0;padding:0;border-radius:999px;background:none;font-size:14px;font-weight:680;color:var(--ux-ink-2);white-space:nowrap;transition:color .35s var(--ux-ease)}
+.u039-tab[aria-selected="true"]{color:var(--ux-page)}
+.u039-tab:focus-visible{outline:2px solid var(--ux-accent);outline-offset:2px}
+.u039-panel{position:relative;height:312px;margin-top:14px;overflow:hidden;border-radius:22px}
+.u039-list{position:absolute;inset:0;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.u039-row{display:flex;align-items:center;gap:12px;padding:10px;border-radius:18px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);transition:transform .55s var(--ux-spring),opacity .35s var(--ux-ease)}
+.u039-art{position:relative;width:52px;height:52px;flex:none;border-radius:14px;background:var(--g);overflow:hidden}
+.u039-art::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.45),transparent 55%)}
+.u039-row b{display:block;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.u039-row small{display:block;margin-top:3px;font-size:12.5px;color:var(--ux-ink-3)}
+.u039-row em{margin-left:auto;font-style:normal;font-size:12.5px;font-weight:650;color:var(--ux-ink-3);font-variant-numeric:tabular-nums}
+.u039-badge{margin-left:6px;padding:2px 6px;border-radius:6px;font-size:10.5px;font-weight:800;background:var(--ux-accent-soft);color:var(--ux-accent);vertical-align:2px}
+</style>
+<div class="ux u039">
+  <div class="u039-tabs" role="tablist" aria-label="finlang 자료형">
+    <span class="u039-pill" aria-hidden="true"></span>
+    <button class="u039-tab" type="button" role="tab" aria-selected="true">Decimal</button>
+    <button class="u039-tab" type="button" role="tab" aria-selected="false">Money</button>
+    <button class="u039-tab" type="button" role="tab" aria-selected="false">Bool</button>
+    <button class="u039-tab" type="button" role="tab" aria-selected="false">String</button>
+  </div>
+  <div class="u039-panel" role="tabpanel"></div>
+</div>
+<script>
+(function () {
+  var root = document.currentScript.previousElementSibling;
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.u039-tab'));
+  var pill = root.querySelector('.u039-pill');
+  var panel = root.querySelector('.u039-panel');
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DATA = [
+    [['값', '정확하게 표현하는 십진수', '0.05', '#bce9ce', '0.1'],
+     ['사용처', '이율, 기간, 단위 가격', 'annual_rate', '#d5e9f3', '%'],
+     ['연산', '십진수끼리 더하고 곱하기', '0.1 + 0.2 = 0.3', '#f4e1bf', '+']],
+    [['값', '통화와 금액을 함께 저장', 'KRW 1000000', '#bce9ce', '₩'],
+     ['생성', '통화 코드와 금액을 전달', 'money("KRW", 1000)', '#d5e9f3', '()'],
+     ['연산', '같은 통화끼리 합산', 'KRW + KRW', '#f4e1bf', '+']],
+    [['값', '참 또는 거짓', 'true / false', '#bce9ce', '?'],
+     ['생성', '값을 비교해 결과 얻기', '0.5 &lt; 1', '#d5e9f3', '&lt;'],
+     ['사용처', '조건에 따라 실행할 코드 선택', 'if (years >= 1)', '#f4e1bf', 'if']],
+    [['값', '큰따옴표로 둘러싼 텍스트', '"KRW"', '#bce9ce', 'Aa'],
+     ['사용처', '통화 코드나 반올림 방식 이름', '"HALF_UP"', '#d5e9f3', '""'],
+     ['사용처', '일반 실행에서 메시지 출력', 'print("완료")', '#f4e1bf', '()']]
+  ];
+  var cur = 0, list = null;
+  function movePill(animate) {
+    var t = tabs[cur];
+    if (!animate) pill.style.transition = 'none';
+    pill.style.setProperty('--x', t.offsetLeft + 'px');
+    pill.style.setProperty('--w', t.offsetWidth + 'px');
+    if (!animate) { void pill.offsetWidth; pill.style.transition = ''; }
+  }
+  function make(i) {
+    var ul = document.createElement('ul');
+    ul.className = 'u039-list';
+    ul.innerHTML = DATA[i].map(function (r, k) {
+      return '<li class="u039-row" style="transition-delay:' + (k * 45) + 'ms"><span class="u039-art" style="--g:' + r[3] + '" aria-hidden="true">' + r[4] + '</span><span><b>' + r[0] + '</b><small>' + r[1] + '</small></span><em>' + r[2] + '</em></li>';
+    }).join('');
+    return ul;
+  }
+  // 새 목록은 이동한 방향에서 들어오고, 이전 목록은 반대쪽으로 빠집니다. 줄마다 조금씩 늦게 움직입니다
+  function select(i, focus) {
+    if (i === cur && list) return;
+    var dir = i > cur ? 1 : -1;
+    cur = i;
+    tabs.forEach(function (t, k) { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    panel.setAttribute('aria-labelledby', tabs[i].id);
+    if (focus) tabs[i].focus();
+    movePill(true);
+    var next = make(i), old = list;
+    list = next;
+    if (!old || rm) { if (old) old.remove(); panel.appendChild(next); return; }
+    Array.prototype.forEach.call(next.children, function (r) { r.style.transform = 'translateX(' + (dir * 70) + '%)'; r.style.opacity = '0'; });
+    panel.appendChild(next);
+    void next.offsetWidth;
+    Array.prototype.forEach.call(next.children, function (r) { r.style.transform = ''; r.style.opacity = ''; });
+    Array.prototype.forEach.call(old.children, function (r) { r.style.transform = 'translateX(' + (-dir * 60) + '%)'; r.style.opacity = '0'; });
+    old.setAttribute('aria-hidden', 'true');
+    setTimeout(function () { old.remove(); }, 700);
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(i); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { e.preventDefault(); select((i + d + tabs.length) % tabs.length, true); }
+    });
+  });
+  var uid = 'u039-' + Math.random().toString(36).slice(2, 7);
+  panel.id = uid;
+  tabs.forEach(function (t, i) { t.id = uid + '-tab-' + i; t.setAttribute('aria-controls', uid); });
+  panel.setAttribute('aria-labelledby', tabs[0].id);
+  list = make(0);
+  panel.appendChild(list);
+  tabs.forEach(function (t, k) { t.tabIndex = k === 0 ? 0 : -1; });
+  movePill(false);
+  new ResizeObserver(function () { movePill(false); }).observe(root);
+})();
+</script>
+          <div class="currency-strip"><span class="currency-chip">KRW 1000</span><span aria-hidden="true">+</span><span class="currency-chip">USD 1</span><span aria-hidden="true">→</span><code>E_CURRENCY_MISMATCH</code></div>
+          <p class="fine">서로 다른 통화를 합칠 때는 적용할 환율을 정하고 먼저 같은 통화로 환산합니다.</p>
+        </section>
+
+        <section class="lesson" id="settlement" aria-labelledby="settlement-heading">
+          <p class="chapter"><span>03</span> ROUNDING</p>
+          <h2 id="settlement-heading">언제, 몇 자리에서 정산할지 적기</h2>
+          <p class="lede">금액을 곱해도 소수부는 유지됩니다. <code>round</code>는 십진수를, <code>settle</code>은 통화가 붙은 금액을 지정한 자리에서 처리합니다.</p>
+          <figure class="editor">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> rounding.fin <span class="editor-lang">FIN</span></figcaption>
+            <pre><code><span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_EVEN"</span>)); <span class="comment">// 2</span>
+<span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));   <span class="comment">// 3</span>
+<span class="call">print</span>(<span class="call">settle</span>(<span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">2.5</span>), <span class="number">0</span>, <span class="str">"HALF_UP"</span>)); <span class="comment">// KRW 3</span></code></pre>
+          </figure>
+          <dl class="modes">
+            <div><dt><code>HALF_EVEN</code></dt><dd>정확히 중간이면 마지막 자리가 짝수인 쪽을 고릅니다.</dd></div>
+            <div><dt><code>HALF_UP</code></dt><dd>정확히 중간이면 절댓값이 커지는 쪽을 고릅니다.</dd></div>
+            <div><dt><code>TOWARD_ZERO</code></dt><dd>지정한 자리 아래를 0 방향으로 버립니다.</dd></div>
+            <div><dt><code>EXACT</code></dt><dd>지정한 자리에서 값이 달라지면 오류를 냅니다.</dd></div>
+          </dl>
+          <p class="fine">나눗셈도 <code>div(1, 3, 4, "HALF_EVEN")</code>처럼 소수 자릿수와 방식을 정합니다. 이 경우 <code>0.3333</code>이 나옵니다.</p>
+        </section>
+
+        <section class="lesson" id="control" aria-labelledby="control-heading">
+          <p class="chapter"><span>04</span> CONTROL &amp; FUNCTIONS</p>
+          <h2 id="control-heading">조건을 고르고 계산을 다시 쓰기</h2>
+          <p class="lede"><code>if</code>의 조건은 <code>true</code>나 <code>false</code>여야 합니다. 반복해서 쓸 계산은 <code>fn</code>으로 묶고, <code>return</code>으로 값을 돌려줍니다.</p>
+          <figure class="editor">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> rate.fin <span class="editor-lang">FIN</span></figcaption>
+            <pre><code><span class="keyword">let</span> percent = <span class="keyword">fn</span>(value) {
+    <span class="keyword">return</span> <span class="call">div</span>(value, <span class="number">100</span>, <span class="number">4</span>, <span class="str">"EXACT"</span>);
+};
+<span class="keyword">if</span> (percent(<span class="number">5</span>) == <span class="number">0.05</span>) {
+    <span class="call">print</span>(<span class="str">"5%"</span>);
+} <span class="keyword">else</span> {
+    <span class="call">print</span>(<span class="str">"다른 이율"</span>);
+}</code></pre>
+          </figure>
+          <p class="fine">이 예제는 일반 실행에서 <code>5%</code>를 출력합니다. 아래 운영용 예제에서는 계약에 맞는 값을 반환합니다.</p>
+        </section>
+
+        <section class="lesson" id="rules" aria-labelledby="rules-heading">
+          <p class="chapter"><span>05</span> PROCEDURES</p>
+          <h2 id="rules-heading">업무 절차를 위에서 아래로 실행하기</h2>
+          <p class="lede"><code>rule</code>은 어떤 값을 받아 어떤 값을 돌려줄지 먼저 선언합니다. <code>step</code>은 적힌 순서대로 실행되므로 앞 단계에서 계산한 값을 다음 단계에서 쓸 수 있습니다.</p>
+          <ol class="flow">
+            <li><span>01</span><strong>입력 선언</strong><small>원금 · 연이율 · 기간</small></li>
+            <li><span>02</span><strong>이자 계산</strong><small>원금 × 연이율 × 기간</small></li>
+            <li><span>03</span><strong>정산 후 반환</strong><small>원 단위 · HALF_UP</small></li>
+          </ol>
+          <details class="disclosure">
+            <summary>전체 운영용 규칙 보기</summary>
+            <figure class="editor">
+              <figcaption><span class="editor-dot" aria-hidden="true"></span> interest_rule_v1.fin <span class="editor-lang">FIN</span></figcaption>
+              <pre><code><span class="keyword">rule</span> interest_v1 {
+    <span class="keyword">input</span> principal <span class="keyword">in</span> <span class="str">"KRW"</span>
+    <span class="keyword">input</span> annual_rate <span class="keyword">as decimal</span>
+    <span class="keyword">input</span> years <span class="keyword">as decimal</span>
+    <span class="keyword">output</span> result <span class="keyword">in</span> <span class="str">"KRW"</span>
+
+    <span class="keyword">step</span> calculate_interest {
+        <span class="keyword">let</span> interest = principal * annual_rate * years
+    }
+
+    <span class="keyword">step</span> settle_interest {
+        <span class="keyword">let</span> result = <span class="call">settle</span>(interest, <span class="number">0</span>, <span class="str">"HALF_UP"</span>)
+    }
+
+    <span class="keyword">return</span> result
+}</code></pre>
+            </figure>
+          </details>
+          <div class="lesson-note"><strong>규칙 · 계약 · 입력은 별도 파일입니다.</strong> 규칙에는 절차를 적고, JSON 계약에는 허용할 자료형·통화·범위를 정합니다. 거래마다 바뀌는 값은 입력 JSON으로 전달합니다. 운영용 <code>-rule-only</code>에서는 허용된 계산 함수를 쓰고 결과를 <code>return</code>으로 넘깁니다.</div>
+        </section>
+
+        <section class="lesson" id="practice" aria-labelledby="practice-heading">
+          <p class="chapter"><span>06</span> PRACTICE</p>
+          <h2 id="practice-heading">이율을 바꾸면 얼마가 될까요?</h2>
+          <p class="lede">원금과 이율, 기간을 바꾸면 정산 전후 금액과 예제 코드가 함께 바뀝니다. 이 실습은 페이지에서 단리 공식과 <code>HALF_UP</code>을 재현합니다. 생성된 코드는 finlang에서 실행할 수 있습니다.</p>
+          <div class="practice-card">
+            <form id="practice-form">
+              <div class="fields">
+                <label for="principal">원금 <small>KRW</small><input type="text" inputmode="numeric" id="principal" maxlength="9" value="1000000" autocomplete="off" aria-describedby="practice-error"></label>
+                <label for="annual-rate">연이율 <small>%</small><select id="annual-rate"><option value="0.05">5%</option><option value="0.06">6%</option><option value="0.075">7.5%</option></select></label>
+                <label for="years">기간 <small>년</small><select id="years"><option value="0.5">0.5년</option><option value="1">1년</option><option value="2">2년</option></select></label>
+              </div>
+              <p id="practice-error" role="status"></p>
+            </form>
+            <div class="totals" aria-live="polite" aria-atomic="true">
+              <div><span>정산 전</span><strong id="practice-unrounded">25,000원</strong></div>
+              <span class="settlement-arrow" aria-hidden="true">→</span>
+              <div><span>원 단위 정산 · HALF_UP</span><strong id="practice-result">25,000원</strong></div>
+            </div>
+            <figure class="editor">
+              <figcaption><span class="editor-dot" aria-hidden="true"></span> practice.fin <span class="editor-lang">FIN</span></figcaption>
+              <pre><code id="practice-code">let principal = money("KRW", 1000000);
+let interest = principal * 0.05 * 0.5;
+print(settle(interest, 0, "HALF_UP"));</code></pre>
+            </figure>
+          </div>
+          <p class="fine">원금을 <code>100</code>으로 바꾸고 이율 5%, 기간 0.5년을 선택하면 <code>2.5원 → 3원</code>이 됩니다.</p>
+        </section>
+
+        <section class="lesson terminal-lesson" id="run" aria-labelledby="run-heading">
+          <p class="chapter"><span>↳</span> RUN LOCALLY</p>
+          <h2 id="run-heading">내 PC에서 실행하기</h2>
+          <p class="lede">체험판 폴더에 위 코드를 <code>practice.fin</code>으로 저장하고 VS Code의 PowerShell 터미널에서 실행해 보세요. 확장 VSIX를 받았다면 확장 설치 탭의 명령도 사용할 수 있습니다.</p>
+          <!-- Lucian UX/UI Prompt #008 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#008 -->
+<!--
+Element: 복사 버튼 체크 전환
+ID: 008 · Category: 버튼 · Tags: button, copy, clipboard, tooltip, code
+What it does: 설치 명령어를 한 번에 복사합니다. 누르면 겹친 사각형 아이콘이 체크로 그려지고, 명령어 위로 빛이 지나가며 ‘복사됨’ 말풍선이 튀어 오릅니다.
+How to use it: 오른쪽 복사 아이콘을 눌러 보세요
+Footprint: fixed size, square
+Needs: tokens.css (the --ux-* theme tokens and the .ux base). Map the tokens to the project's theme variables.
+Live demo: https://lucianlabs.dev/uxui-prompt/#008
+-->
+<style>
+.u008{position:relative;width:340px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.u008-tabs{display:flex;gap:4px;align-self:flex-start;margin-left:12px}
+.u008-tab{height:30px;padding:0 12px;border:0;border-radius:9px;background:none;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;font-weight:600;color:var(--ux-ink-3);transition:background-color .3s var(--ux-ease),color .3s var(--ux-ease)}
+.u008-tab[aria-selected="true"]{background:var(--ux-surface);color:var(--ux-ink);box-shadow:0 0 0 1px var(--ux-line)}
+.u008-box{position:relative;display:flex;align-items:center;width:316px;height:62px;padding:0 8px 0 18px;border-radius:18px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line-2),0 18px 32px -24px var(--ux-shadow-strong);overflow:visible;transition:box-shadow .45s var(--ux-ease)}
+.u008-code{position:relative;flex:1;min-width:0;overflow:hidden;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14.5px;white-space:nowrap;color:var(--ux-ink)}
+.u008-code em{font-style:normal;color:var(--ux-mint);margin-right:8px;user-select:none}
+.u008-code b{font-weight:500;color:var(--ux-accent)}
+.u008-cmd{display:inline-block}
+.u008-code::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,color-mix(in srgb,var(--ux-mint) 30%,transparent) 50%,transparent 80%);transform:translateX(-110%);pointer-events:none}
+.u008.is-copied .u008-code::after{animation:u008-sweep .7s var(--ux-ease)}
+@keyframes u008-sweep{to{transform:translateX(110%)}}
+.u008-btn{position:relative;flex:none;width:46px;height:46px;border:0;padding:0;border-radius:13px;background:var(--ux-surface-2);color:var(--ux-ink-2);display:grid;place-items:center;transition:background-color .35s var(--ux-ease),color .35s var(--ux-ease),transform .45s var(--ux-spring)}
+.u008-btn:hover{background:var(--ux-surface-3);color:var(--ux-ink)}
+.u008-btn:active{transform:scale(.88)}
+.u008-btn:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
+.u008-btn svg{position:absolute;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s var(--ux-ease),transform .5s var(--ux-spring)}
+.u008-ok{opacity:0;transform:scale(.4) rotate(-30deg)}
+.u008-ok path{stroke-width:2.6;stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .4s var(--ux-ease) .1s}
+.u008.is-copied .u008-btn{background:var(--ux-mint);color:var(--ux-accent-ink)}
+.u008.is-copied .u008-cp{opacity:0;transform:scale(.4) rotate(30deg)}
+.u008.is-copied .u008-ok{opacity:1;transform:none}
+.u008.is-copied .u008-ok path{stroke-dashoffset:0}
+.u008.is-copied .u008-box{box-shadow:0 0 0 1.5px var(--ux-mint),0 0 0 6px color-mix(in srgb,var(--ux-mint) 16%,transparent),0 18px 32px -24px var(--ux-shadow-strong)}
+.u008-tip{position:absolute;right:-6px;top:-44px;padding:7px 12px;border-radius:10px;background:var(--ux-ink);color:var(--ux-page);font-size:13px;font-weight:650;white-space:nowrap;pointer-events:none;opacity:0;transform:translateY(8px) scale(.8);transform-origin:80% 100%;transition:opacity .25s var(--ux-ease),transform .5s var(--ux-spring)}
+.u008-tip::after{content:"";position:absolute;right:24px;bottom:-5px;width:10px;height:10px;background:inherit;border-radius:2px;transform:rotate(45deg)}
+.u008.is-copied .u008-tip{opacity:1;transform:none}
+</style>
+<div class="ux u008">
+  <div class="u008-tabs" role="tablist" aria-label="터미널 명령">
+    <button class="u008-tab" type="button" role="tab" aria-selected="true" data-cmd=".\fin.exe -version">버전 확인</button>
+    <button class="u008-tab" type="button" role="tab" aria-selected="false" data-cmd=".\fin.exe -file practice.fin">예제 실행</button>
+    <button class="u008-tab" type="button" role="tab" aria-selected="false" data-cmd="code --install-extension finlang-language-0.1.0.vsix">확장 설치</button>
+  </div>
+  <div class="u008-box">
+    <code class="u008-code"><em aria-hidden="true">PS</em><span class="u008-cmd">.\fin.exe -version</span></code>
+    <button class="u008-btn" type="button" aria-label="터미널 명령 복사">
+      <svg class="u008-cp" viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg>
+      <svg class="u008-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2L18.5 8"/></svg>
+    </button>
+    <span class="u008-tip" role="status">복사됨</span>
+  </div>
+</div>
+<script>
+(function () {
+  var root = document.currentScript.previousElementSibling;
+  var btn = root.querySelector('.u008-btn');
+  var cmd = root.querySelector('.u008-cmd');
+  var tip = root.querySelector('.u008-tip');
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.u008-tab'));
+  var t = 0;
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  tip.textContent = '';
+  function text() { return cmd.textContent; }
+  btn.addEventListener('click', async function () {
+    try {
+      await navigator.clipboard.writeText(text());
+    } catch {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(cmd);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      tip.textContent = '명령이 선택됐습니다. Ctrl+C로 복사하세요.';
+      root.classList.add('is-copied');
+      clearTimeout(t);
+      t = setTimeout(function () { root.classList.remove('is-copied'); tip.textContent = ''; }, 3200);
+      return;
+    }
+    clearTimeout(t);
+    root.classList.remove('is-copied');
+    void root.offsetWidth;
+    root.classList.add('is-copied');
+    tip.textContent = '복사됨';
+    t = setTimeout(function () { if (root.isConnected) { root.classList.remove('is-copied'); tip.textContent = ''; } }, 1800);
+  });
+  // 패키지 관리자를 바꾸면 명령어가 위에서 내려오며 바뀝니다
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { select(i); });
+    tab.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { e.preventDefault(); var n = (i + d + tabs.length) % tabs.length; select(n); tabs[n].focus(); }
+    });
+  });
+  function select(i) {
+    tabs.forEach(function (tb, k) { tb.setAttribute('aria-selected', String(k === i)); tb.tabIndex = k === i ? 0 : -1; });
+    cmd.textContent = tabs[i].dataset.cmd;
+    if (cmd.animate && !rm) cmd.animate([{ transform: 'translateY(-60%)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 360, easing: 'cubic-bezier(.34,1.45,.64,1)' });
+  }
+  tabs.forEach(function (tb, k) { tb.tabIndex = k === 0 ? 0 : -1; });
+})();
+</script>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="footer"><div class="shell"><a class="brand" href="#top"><span class="brand-icon" aria-hidden="true">ƒ</span> finlang</a><span>문법 가이드 · v0.5.0</span><a href="#top">맨 위로 ↑</a></div></footer>
+</body>
+</html>
