@@ -1,0 +1,9 @@
+// 원금은 통화가 있는 Money로, 이율과 기간은 Decimal로 적습니다.
+let principal = money("KRW", 1000000);
+let annual_rate = 0.05;
+let years = 0.5;
+
+// 원금 × 연이율 × 기간으로 단리 이자를 계산합니다.
+let interest = principal * annual_rate * years;
+// 소수 자릿수 0과 HALF_UP을 지정해 원 단위로 정산합니다.
+print(settle(interest, 0, "HALF_UP"));

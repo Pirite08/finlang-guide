@@ -1,0 +1,13 @@
+// Decimal은 연이율 5%를 정확한 십진수로 저장합니다.
+let annual_rate = 0.05;
+// String은 "KRW"처럼 큰따옴표 안에 적습니다.
+let unit = "KRW";
+// Money는 금액 1,000에 통화 코드를 함께 담습니다.
+let principal = money(unit, 1000);
+// 비교 결과는 true 또는 false인 Bool입니다.
+let has_interest = annual_rate > 0;
+
+print(annual_rate);
+print(principal);
+print(has_interest);
+print(unit);

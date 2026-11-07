@@ -1,0 +1,12 @@
+// 퍼센트로 적은 값을 정확한 십진수 비율로 변환합니다.
+let percent = fn(value) {
+    return div(value, 100, 4, "EXACT");
+};
+
+let annual_rate = percent(5);
+// 조건이 true면 if 블록, false면 else 블록을 실행합니다.
+if (annual_rate >= 0.05) {
+    print("연이율 5% 이상");
+} else {
+    print("연이율 5% 미만");
+}

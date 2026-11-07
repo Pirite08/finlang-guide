@@ -10,55 +10,59 @@
   <link rel="stylesheet" href="./tokens.css">
   <link rel="stylesheet" href="./style.css">
   <script defer src="./practice.js"></script>
+  <script defer src="./trace.js"></script>
+  <script defer src="./book.js"></script>
 </head>
 <body>
   <a class="skip" href="#content">본문으로 건너뛰기</a>
   <header class="topbar">
     <div class="shell header-inner">
-      <a class="brand" href="#top" aria-label="finlang 가이드 맨 위"><span class="brand-icon" aria-hidden="true">ƒ</span> finlang<span class="brand-divider"></span><span class="brand-context">문법 가이드</span></a>
+      <button type="button" class="book-menu" id="book-menu" aria-expanded="false" aria-controls="book-sidebar">☰ <span>목차</span></button>
+      <a class="brand" href="#top" aria-label="finlang 가이드 맨 위"><span class="brand-icon" aria-hidden="true">ƒ</span> finlang<span class="brand-divider"></span><span class="brand-context">기초 문법</span></a>
       <a class="header-link" href="#practice">단리 실습 <span aria-hidden="true">↗</span></a>
     </div>
   </header>
-  <main id="content">
-    <section class="hero" id="top" aria-labelledby="title">
-      <div class="shell hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="signal"></span> FINLANG / BEGINNER GUIDE</p>
-          <h1 id="title">금융 계산을<br><em>한 줄씩</em> 읽어 보세요.</h1>
-          <p class="intro">원금에 이름을 붙이고, 이율을 곱하고, 원 단위로 정산합니다. 단리 이자 예제 하나로 변수, 자료형, 실행 순서를 익혀 보세요.</p>
-          <div class="hero-links">
-            <a class="primary" href="#variables">문법부터 읽기 <span aria-hidden="true">↓</span></a>
-            <a class="secondary" href="#practice">이율 바꿔 보기 <span aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-        <figure class="editor hero-editor">
-          <figcaption><span class="editor-dot" aria-hidden="true"></span> first-interest.fin <span class="editor-lang">FIN</span></figcaption>
-          <pre><code><span class="comment">// 원금 100만 원에 연이율 5%를 반년 적용</span>
-<span class="keyword">let</span> principal = <span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">1000000</span>);
-<span class="keyword">let</span> interest = principal * <span class="number">0.05</span> * <span class="number">0.5</span>;
-<span class="call">print</span>(<span class="call">settle</span>(interest, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));</code></pre>
-          <div class="editor-result"><span>OUTPUT</span><strong>KRW <b>25000</b></strong></div>
-        </figure>
-      </div>
-    </section>
-
-    <div class="shell guide-layout">
-      <aside class="contents">
-        <nav aria-label="가이드 목차">
-          <p>목차</p>
-          <ol>
-            <li><a href="#variables"><span>01</span> 변수 선언</a></li>
-            <li><a href="#types"><span>02</span> 자료형</a></li>
-            <li><a href="#settlement"><span>03</span> 반올림과 정산</a></li>
-            <li><a href="#control"><span>04</span> 조건문과 함수</a></li>
-            <li><a href="#rules"><span>05</span> rule과 step</a></li>
-            <li><a href="#practice"><span>06</span> 단리 실습</a></li>
+  <main id="content" class="shell book-layout" tabindex="-1">
+    <aside class="contents" id="book-sidebar">
+      <nav aria-label="책 목차">
+        <div class="book-edition"><strong>finlang 기초 문법</strong><span id="book-count">v0.5.0</span></div>
+        <label class="toc-filter" for="book-filter">장 찾기</label>
+        <input type="search" id="book-filter" placeholder="예: 변수, 반올림" autocomplete="off">
+        <div id="book-toc"></div>
+        <p id="book-no-results" role="status" hidden>일치하는 장이 없습니다.</p>
+      </nav>
+    </aside>
+    <div class="book-main">
+      <p id="book-location" class="book-location" aria-label="현재 위치"></p>
+      <article class="lessons" aria-label="finlang 가이드 본문">
+        <section class="lesson opening" id="top" data-chapter data-title="시작하기" data-group="책 소개" data-search="소개 설치 첫 예제" aria-labelledby="title">
+          <p class="chapter"><span>00</span> 시작하기</p>
+          <h1 id="title">finlang 기초 문법</h1>
+          <p class="lede">변수에 이름을 붙이는 것부터 이자를 원 단위로 정산하는 것까지, 단리 예제를 중심으로 한 장씩 따라갑니다.</p>
+          <ol class="opening-sequence">
+            <li><span>01</span> 코드를 읽습니다.</li>
+            <li><span>02</span> 값을 바꿔 봅니다.</li>
+            <li><span>03</span> 실행 결과를 확인합니다.</li>
           </ol>
-        </nav>
-      </aside>
+          <h2>첫 예제 · 반년 동안 생기는 이자</h2>
+          <p>원금 100만 원에 연이율 5%를 반년 적용하면 이자는 25,000원입니다. 아래 예제를 <code>first-interest.fin</code>으로 받아 같은 결과를 확인할 수 있습니다.</p>
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> first-interest.fin<a class="example-download" href="./examples/first-interest.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// 원금은 통화가 있는 Money로, 이율과 기간은 Decimal로 적습니다.</span>
+<span class="keyword">let</span> principal = <span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">1000000</span>);
+<span class="keyword">let</span> annual_rate = <span class="number">0.05</span>;
+<span class="keyword">let</span> years = <span class="number">0.5</span>;
 
-      <div class="lessons">
-        <section class="lesson" id="variables" aria-labelledby="variables-heading">
+<span class="comment">// 원금 × 연이율 × 기간으로 단리 이자를 계산합니다.</span>
+<span class="keyword">let</span> interest = principal * annual_rate * years;
+<span class="comment">// 소수 자릿수 0과 HALF_UP을 지정해 원 단위로 정산합니다.</span>
+<span class="call">print</span>(<span class="call">settle</span>(interest, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>KRW 25000</strong></div>
+          </figure>
+          <p class="fine">Windows 체험판의 <code>fin.exe</code>를 쓰고 있다면 같은 폴더에 예제 파일을 저장하세요. <a href="#run">내 PC에서 실행하는 방법 보기</a></p>
+        </section>
+
+        <section class="lesson" id="variables" data-chapter data-title="변수 선언" data-group="기초 문법" data-search="let 변수 이름 값" aria-labelledby="variables-heading">
           <p class="chapter"><span>01</span> VARIABLES</p>
           <h2 id="variables-heading">계산에 쓰는 값에 이름 붙이기</h2>
           <p class="lede"><code>let</code>으로 값을 선언하면 다음 줄부터 이름으로 쓸 수 있습니다. 이름, 대입 기호, 값, 문장의 끝을 차례대로 읽어 보세요.</p>
@@ -70,9 +74,21 @@
             <div><code>;</code><span>문장 끝</span></div>
           </div>
           <div class="lesson-note"><strong>이름에는 단위를 담아 보세요.</strong> <code>annual_rate</code>는 연이율, <code>years</code>는 연 단위 기간입니다. <code>0.05</code>는 5%이고, <code>0.5</code>년은 반년입니다. 주석은 <code>//</code>로 시작합니다.</div>
+          <h3 class="example-heading">예제 · 계산한 값을 다시 쓰기</h3>
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> variables.fin<a class="example-download" href="./examples/variables.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// 0.1과 0.2를 더한 값을 total이라는 이름에 연결합니다.</span>
+<span class="keyword">let</span> total = <span class="number">0.1</span> + <span class="number">0.2</span>;
+
+<span class="comment">// =은 이름과 값을 연결하고, ==는 두 값이 같은지 검사합니다.</span>
+<span class="call">print</span>(total);
+<span class="call">print</span>(total == <span class="number">0.3</span>);</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>0.3
+true</strong></div>
+          </figure>
         </section>
 
-        <section class="lesson" id="types" aria-labelledby="types-heading">
+        <section class="lesson" id="types" data-chapter data-title="자료형" data-group="기초 문법" data-search="decimal money bool string 통화 숫자 문자열" aria-labelledby="types-heading">
           <p class="chapter"><span>02</span> TYPES</p>
           <h2 id="types-heading">같은 숫자도 쓰임에 따라 달라집니다</h2>
           <p class="lede">이율은 정확한 십진수, 원금은 통화가 붙은 금액입니다. 탭을 바꿔 어떤 값을 담고 어떤 연산에 쓰는지 확인해 보세요.</p>
@@ -190,17 +206,48 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#039
 </script>
           <div class="currency-strip"><span class="currency-chip">KRW 1000</span><span aria-hidden="true">+</span><span class="currency-chip">USD 1</span><span aria-hidden="true">→</span><code>E_CURRENCY_MISMATCH</code></div>
           <p class="fine">서로 다른 통화를 합칠 때는 적용할 환율을 정하고 먼저 같은 통화로 환산합니다.</p>
+          <h3 class="example-heading">예제 · 네 가지 자료형을 함께 쓰기</h3>
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> types.fin<a class="example-download" href="./examples/types.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// Decimal은 연이율 5%를 정확한 십진수로 저장합니다.</span>
+<span class="keyword">let</span> annual_rate = <span class="number">0.05</span>;
+<span class="comment">// String은 "KRW"처럼 큰따옴표 안에 적습니다.</span>
+<span class="keyword">let</span> unit = <span class="str">"KRW"</span>;
+<span class="comment">// Money는 금액 1,000에 통화 코드를 함께 담습니다.</span>
+<span class="keyword">let</span> principal = <span class="call">money</span>(unit, <span class="number">1000</span>);
+<span class="comment">// 비교 결과는 true 또는 false인 Bool입니다.</span>
+<span class="keyword">let</span> has_interest = annual_rate &gt; <span class="number">0</span>;
+
+<span class="call">print</span>(annual_rate);
+<span class="call">print</span>(principal);
+<span class="call">print</span>(has_interest);
+<span class="call">print</span>(unit);</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>0.05
+KRW 1000
+true
+KRW</strong></div>
+          </figure>
         </section>
 
-        <section class="lesson" id="settlement" aria-labelledby="settlement-heading">
+        <section class="lesson" id="settlement" data-chapter data-title="반올림과 정산" data-group="기초 문법" data-search="round settle half_even half_up decimal" aria-labelledby="settlement-heading">
           <p class="chapter"><span>03</span> ROUNDING</p>
           <h2 id="settlement-heading">언제, 몇 자리에서 정산할지 적기</h2>
           <p class="lede">금액을 곱해도 소수부는 유지됩니다. <code>round</code>는 십진수를, <code>settle</code>은 통화가 붙은 금액을 지정한 자리에서 처리합니다.</p>
-          <figure class="editor">
-            <figcaption><span class="editor-dot" aria-hidden="true"></span> rounding.fin <span class="editor-lang">FIN</span></figcaption>
-            <pre><code><span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_EVEN"</span>)); <span class="comment">// 2</span>
-<span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));   <span class="comment">// 3</span>
-<span class="call">print</span>(<span class="call">settle</span>(<span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">2.5</span>), <span class="number">0</span>, <span class="str">"HALF_UP"</span>)); <span class="comment">// KRW 3</span></code></pre>
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> settlement.fin<a class="example-download" href="./examples/settlement.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// 소수 자릿수 0을 지정하면 원 단위처럼 정수 자리까지 남깁니다.</span>
+<span class="comment">// HALF_EVEN은 정확히 중간인 2.5에서 짝수 쪽인 2를 고릅니다.</span>
+<span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_EVEN"</span>));
+<span class="comment">// HALF_UP은 정확히 중간일 때 절댓값이 커지는 쪽을 고릅니다.</span>
+<span class="call">print</span>(<span class="call">round</span>(<span class="number">2.5</span>, <span class="number">0</span>, <span class="str">"HALF_UP"</span>));
+<span class="comment">// settle로 Money를 정산하면 통화는 그대로 유지됩니다.</span>
+<span class="call">print</span>(<span class="call">settle</span>(<span class="call">money</span>(<span class="str">"KRW"</span>, <span class="number">2.5</span>), <span class="number">0</span>, <span class="str">"HALF_UP"</span>));
+<span class="comment">// 나눗셈도 결과 자릿수와 반올림 방식을 지정합니다.</span>
+<span class="call">print</span>(<span class="call">div</span>(<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="str">"HALF_EVEN"</span>));</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>2
+3
+KRW 3
+0.3333</strong></div>
           </figure>
           <dl class="modes">
             <div><dt><code>HALF_EVEN</code></dt><dd>정확히 중간이면 마지막 자리가 짝수인 쪽을 고릅니다.</dd></div>
@@ -211,25 +258,30 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#039
           <p class="fine">나눗셈도 <code>div(1, 3, 4, "HALF_EVEN")</code>처럼 소수 자릿수와 방식을 정합니다. 이 경우 <code>0.3333</code>이 나옵니다.</p>
         </section>
 
-        <section class="lesson" id="control" aria-labelledby="control-heading">
+        <section class="lesson" id="control" data-chapter data-title="조건문과 함수" data-group="기초 문법" data-search="if else fn return 조건 함수" aria-labelledby="control-heading">
           <p class="chapter"><span>04</span> CONTROL &amp; FUNCTIONS</p>
           <h2 id="control-heading">조건을 고르고 계산을 다시 쓰기</h2>
           <p class="lede"><code>if</code>의 조건은 <code>true</code>나 <code>false</code>여야 합니다. 반복해서 쓸 계산은 <code>fn</code>으로 묶고, <code>return</code>으로 값을 돌려줍니다.</p>
-          <figure class="editor">
-            <figcaption><span class="editor-dot" aria-hidden="true"></span> rate.fin <span class="editor-lang">FIN</span></figcaption>
-            <pre><code><span class="keyword">let</span> percent = <span class="keyword">fn</span>(value) {
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> control.fin<a class="example-download" href="./examples/control.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// 퍼센트로 적은 값을 정확한 십진수 비율로 변환합니다.</span>
+<span class="keyword">let</span> percent = <span class="keyword">fn</span>(value) {
     <span class="keyword">return</span> <span class="call">div</span>(value, <span class="number">100</span>, <span class="number">4</span>, <span class="str">"EXACT"</span>);
 };
-<span class="keyword">if</span> (percent(<span class="number">5</span>) == <span class="number">0.05</span>) {
-    <span class="call">print</span>(<span class="str">"5%"</span>);
+
+<span class="keyword">let</span> annual_rate = <span class="call">percent</span>(<span class="number">5</span>);
+<span class="comment">// 조건이 true면 if 블록, false면 else 블록을 실행합니다.</span>
+<span class="keyword">if</span> (annual_rate &gt;= <span class="number">0.05</span>) {
+    <span class="call">print</span>(<span class="str">"연이율 5% 이상"</span>);
 } <span class="keyword">else</span> {
-    <span class="call">print</span>(<span class="str">"다른 이율"</span>);
+    <span class="call">print</span>(<span class="str">"연이율 5% 미만"</span>);
 }</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>연이율 5% 이상</strong></div>
           </figure>
-          <p class="fine">이 예제는 일반 실행에서 <code>5%</code>를 출력합니다. 아래 운영용 예제에서는 계약에 맞는 값을 반환합니다.</p>
+          <p class="fine">이 예제는 일반 실행에서 <code>연이율 5% 이상</code>을 출력합니다. 아래 운영용 예제에서는 계약에 맞는 값을 반환합니다.</p>
         </section>
 
-        <section class="lesson" id="rules" aria-labelledby="rules-heading">
+        <section class="lesson" id="rules" data-chapter data-title="rule과 step" data-group="실행과 실습" data-search="규칙 절차 순서 trace 기록 계산" aria-labelledby="rules-heading">
           <p class="chapter"><span>05</span> PROCEDURES</p>
           <h2 id="rules-heading">업무 절차를 위에서 아래로 실행하기</h2>
           <p class="lede"><code>rule</code>은 어떤 값을 받아 어떤 값을 돌려줄지 먼저 선언합니다. <code>step</code>은 적힌 순서대로 실행되므로 앞 단계에서 계산한 값을 다음 단계에서 쓸 수 있습니다.</p>
@@ -238,24 +290,32 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#039
             <li><span>02</span><strong>이자 계산</strong><small>원금 × 연이율 × 기간</small></li>
             <li><span>03</span><strong>정산 후 반환</strong><small>원 단위 · HALF_UP</small></li>
           </ol>
+          <h3 class="example-heading">실행 순서를 한 단계씩 보기</h3>
+          <div id="rule-trace" class="rule-trace">
+            <noscript>합성 입력으로 계산한 이자 2.5원을 HALF_UP으로 원 단위 정산하면 3원이 됩니다.</noscript>
+          </div>
           <details class="disclosure">
             <summary>전체 운영용 규칙 보기</summary>
             <figure class="editor">
               <figcaption><span class="editor-dot" aria-hidden="true"></span> interest_rule_v1.fin <span class="editor-lang">FIN</span></figcaption>
-              <pre><code><span class="keyword">rule</span> interest_v1 {
+              <pre tabindex="0"><code><span class="keyword">rule</span> interest_v1 {
+    <span class="comment">// 원금은 원화 금액이고 이율과 기간은 십진수입니다.</span>
     <span class="keyword">input</span> principal <span class="keyword">in</span> <span class="str">"KRW"</span>
-    <span class="keyword">input</span> annual_rate <span class="keyword">as decimal</span>
-    <span class="keyword">input</span> years <span class="keyword">as decimal</span>
+    <span class="keyword">input</span> annual_rate <span class="keyword">as</span> decimal
+    <span class="keyword">input</span> years <span class="keyword">as</span> decimal
     <span class="keyword">output</span> result <span class="keyword">in</span> <span class="str">"KRW"</span>
 
     <span class="keyword">step</span> calculate_interest {
+        <span class="comment">// 앞에서 받은 원금, 이율, 기간을 곱합니다.</span>
         <span class="keyword">let</span> interest = principal * annual_rate * years
     }
 
     <span class="keyword">step</span> settle_interest {
+        <span class="comment">// 소수 자릿수 0을 지정해 원 단위로 정산합니다.</span>
         <span class="keyword">let</span> result = <span class="call">settle</span>(interest, <span class="number">0</span>, <span class="str">"HALF_UP"</span>)
     }
 
+    <span class="comment">// 계약에 선언한 이름으로 결과를 돌려줍니다.</span>
     <span class="keyword">return</span> result
 }</code></pre>
             </figure>
@@ -263,7 +323,7 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#039
           <div class="lesson-note"><strong>규칙 · 계약 · 입력은 별도 파일입니다.</strong> 규칙에는 절차를 적고, JSON 계약에는 허용할 자료형·통화·범위를 정합니다. 거래마다 바뀌는 값은 입력 JSON으로 전달합니다. 운영용 <code>-rule-only</code>에서는 허용된 계산 함수를 쓰고 결과를 <code>return</code>으로 넘깁니다.</div>
         </section>
 
-        <section class="lesson" id="practice" aria-labelledby="practice-heading">
+        <section class="lesson" id="practice" data-chapter data-title="단리 실습" data-group="실행과 실습" data-search="원금 이율 연이율 기간 반올림" aria-labelledby="practice-heading">
           <p class="chapter"><span>06</span> PRACTICE</p>
           <h2 id="practice-heading">이율을 바꾸면 얼마가 될까요?</h2>
           <p class="lede">원금과 이율, 기간을 바꾸면 정산 전후 금액과 예제 코드가 함께 바뀝니다. 이 실습은 페이지에서 단리 공식과 <code>HALF_UP</code>을 재현합니다. 생성된 코드는 finlang에서 실행할 수 있습니다.</p>
@@ -291,10 +351,10 @@ print(settle(interest, 0, "HALF_UP"));</code></pre>
           <p class="fine">원금을 <code>100</code>으로 바꾸고 이율 5%, 기간 0.5년을 선택하면 <code>2.5원 → 3원</code>이 됩니다.</p>
         </section>
 
-        <section class="lesson terminal-lesson" id="run" aria-labelledby="run-heading">
+        <section class="lesson terminal-lesson" id="run" data-chapter data-title="내 PC에서 실행하기" data-group="실행과 실습" data-search="설치 vscode windows 실행" aria-labelledby="run-heading">
           <p class="chapter"><span>↳</span> RUN LOCALLY</p>
           <h2 id="run-heading">내 PC에서 실행하기</h2>
-          <p class="lede">체험판 폴더에 위 코드를 <code>practice.fin</code>으로 저장하고 VS Code의 PowerShell 터미널에서 실행해 보세요. 확장 VSIX를 받았다면 확장 설치 탭의 명령도 사용할 수 있습니다.</p>
+          <p class="lede">체험판 폴더에 위 코드를 <code>practice.fin</code>으로 저장하고 VS Code의 PowerShell 터미널에서 실행해 보세요. 체험판을 받았다면 단리 계산과 감사 재현도 실행할 수 있습니다.</p>
           <!-- Lucian UX/UI Prompt #008 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#008 -->
 <!--
 Element: 복사 버튼 체크 전환
@@ -338,7 +398,7 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#008
   <div class="u008-tabs" role="tablist" aria-label="터미널 명령">
     <button class="u008-tab" type="button" role="tab" aria-selected="true" data-cmd=".\fin.exe -version">버전 확인</button>
     <button class="u008-tab" type="button" role="tab" aria-selected="false" data-cmd=".\fin.exe -file practice.fin">예제 실행</button>
-    <button class="u008-tab" type="button" role="tab" aria-selected="false" data-cmd="code --install-extension finlang-language-0.1.0.vsix">확장 설치</button>
+    <button class="u008-tab" type="button" role="tab" aria-selected="false" data-cmd=".\run-demo.cmd --no-pause">단리 체험판</button>
   </div>
   <div class="u008-box">
     <code class="u008-code"><em aria-hidden="true">PS</em><span class="u008-cmd">.\fin.exe -version</span></code>
@@ -399,7 +459,8 @@ Live demo: https://lucianlabs.dev/uxui-prompt/#008
 })();
 </script>
         </section>
-      </div>
+      </article>
+      <nav id="book-pagination" class="book-pagination" aria-label="장 이동"></nav>
     </div>
   </main>
   <footer class="footer"><div class="shell"><a class="brand" href="#top"><span class="brand-icon" aria-hidden="true">ƒ</span> finlang</a><span>문법 가이드 · v0.5.0</span><a href="#top">맨 위로 ↑</a></div></footer>
