@@ -1,0 +1,11 @@
+// 연이율 5%를 십진수 0.05로 저장합니다.
+let annual_rate = 0.05;
+
+let calculate_interest = fn(principal) {
+    // 원금에 연이율과 0.5년을 곱해 반년 이자를 계산합니다.
+    // annual_rate 자리에서 annu를 입력해 변수 후보를 확인합니다.
+    return principal * annual_rate * 0.5;
+};
+
+// 이 줄의 calculate_interest 자리에서 calc를 입력해 함수 후보를 확인합니다.
+print(calculate_interest(1000000));

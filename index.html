@@ -351,10 +351,45 @@ print(settle(interest, 0, "HALF_UP"));</code></pre>
           <p class="fine">원금을 <code>100</code>으로 바꾸고 이율 5%, 기간 0.5년을 선택하면 <code>2.5원 → 3원</code>이 됩니다.</p>
         </section>
 
-        <section class="lesson terminal-lesson" id="run" data-chapter data-title="내 PC에서 실행하기" data-group="실행과 실습" data-search="설치 vscode windows 실행" aria-labelledby="run-heading">
+        <section class="lesson terminal-lesson" id="run" data-chapter data-title="내 PC에서 실행하기" data-group="실행과 실습" data-search="설치 vscode vsix windows 확장 자동완성 실행" aria-labelledby="run-heading">
           <p class="chapter"><span>↳</span> RUN LOCALLY</p>
           <h2 id="run-heading">내 PC에서 실행하기</h2>
-          <p class="lede">체험판 폴더에 위 코드를 <code>practice.fin</code>으로 저장하고 VS Code의 PowerShell 터미널에서 실행해 보세요. 체험판을 받았다면 단리 계산과 감사 재현도 실행할 수 있습니다.</p>
+          <p class="lede">VS Code에서 <code>.fin</code> 파일을 열고 자동완성을 써 보세요. 완성한 코드는 Windows 체험판의 <code>fin.exe</code>로 실행할 수 있습니다.</p>
+
+          <h3 class="example-heading">VS Code 확장 0.2.0 설치하기</h3>
+          <p class="lesson-note"><strong>GitHub 접근 권한이 필요합니다.</strong> 아래 설치 파일은 비공개 <code>Pirite08/finlang</code> 저장소에 있습니다. 저장소에 접근할 수 있는 GitHub 계정으로 로그인하세요.</p>
+          <ol>
+            <li><a href="https://github.com/Pirite08/finlang/releases/download/vscode-v0.2.0/finlang-language-0.2.0.vsix">finlang Language Support 0.2.0 VSIX 받기</a>를 누릅니다.</li>
+            <li>VS Code에서 <strong>확장 → … → VSIX에서 설치</strong>를 선택하고 받은 <code>finlang-language-0.2.0.vsix</code> 파일을 엽니다.</li>
+            <li>설치가 끝나면 아래 <code>vscode-autocomplete.fin</code> 파일을 VS Code에서 엽니다.</li>
+          </ol>
+          <p class="fine">터미널에서는 다운로드한 폴더에서 <code>code --install-extension .\finlang-language-0.2.0.vsix</code>로 설치할 수도 있습니다.</p>
+
+          <h3 class="example-heading">변수와 함수 자동완성 연습하기</h3>
+          <p>아래 파일을 받아 두 곳을 잠시 줄여 쓰고, 자동완성으로 다시 채워 보세요.</p>
+          <figure class="editor book-example">
+            <figcaption><span class="editor-dot" aria-hidden="true"></span> vscode-autocomplete.fin<a class="example-download" href="./examples/vscode-autocomplete.fin" download>.fin 받기 ↓</a></figcaption>
+            <pre tabindex="0"><code><span class="comment">// 연이율 5%를 십진수 0.05로 저장합니다.</span>
+<span class="keyword">let</span> annual_rate = <span class="number">0.05</span>;
+
+<span class="keyword">let</span> calculate_interest = <span class="keyword">fn</span>(principal) {
+    <span class="comment">// 원금에 연이율과 0.5년을 곱해 반년 이자를 계산합니다.</span>
+    <span class="comment">// annual_rate 자리에서 annu를 입력해 변수 후보를 확인합니다.</span>
+    <span class="keyword">return</span> principal * annual_rate * <span class="number">0.5</span>;
+};
+
+<span class="comment">// 이 줄의 calculate_interest 자리에서 calc를 입력해 함수 후보를 확인합니다.</span>
+<span class="call">print</span>(<span class="call">calculate_interest</span>(<span class="number">1000000</span>));</code></pre>
+            <div class="editor-result"><span>실행 결과</span><strong>25000</strong></div>
+          </figure>
+          <ol>
+            <li><strong>변수</strong> · <code>return</code> 줄의 <code>annual_rate</code>만 <code>annu</code>로 바꿉니다. <code>annu</code> 바로 뒤에서 <kbd>Ctrl+Space</kbd>를 눌러 <code>annual_rate</code>를 선택합니다.</li>
+            <li><strong>함수</strong> · 마지막 줄을 <code>print(calc);</code>로 바꿉니다. <code>calc</code> 바로 뒤에서 <kbd>Ctrl+Space</kbd>를 눌러 <code>calculate_interest</code>를 선택합니다. 삽입된 함수 호출에서 선택된 인수 자리 <code>principal</code>에 <code>1000000</code>을 입력합니다.</li>
+          </ol>
+          <p class="fine">완성한 예제를 체험판 폴더에 저장하고 <code>.\fin.exe -file vscode-autocomplete.fin</code>을 실행하면 <code>25000</code>이 출력됩니다.</p>
+
+          <h3 class="example-heading">체험판 실행 명령</h3>
+          <p>단리 실습에서 만든 코드를 체험판 폴더에 <code>practice.fin</code>으로 저장하고 VS Code의 PowerShell 터미널에서 실행해 보세요.</p>
           <!-- Lucian UX/UI Prompt #008 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#008 -->
 <!--
 Element: 복사 버튼 체크 전환
